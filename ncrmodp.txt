@@ -1,0 +1,36 @@
+int pow(int a, int b, int m){
+  if(b==0) return 1;
+  if(b%2==0) {
+    int t = pow(a, b/2, m);
+    return (1LL * t * t)%m; 
+  }
+  else{
+    int t = pow(a, (b-1)/2, m);
+    t = (1LL * t * t)%m;
+    return (1LL * t * a)%m;
+  }
+}
+
+const int N = 12;
+int fact[N+1], inv_fact[N+1];
+
+// Time: Linear O(N)
+void storeFacts(int p = mod){
+  //store factorials 
+  fact[0] = 1;
+  for(int i=1; i<=N; i++) fact[i] = (i*fact[i-1])%p;
+
+  //store inverse of factorials
+  inv_fact[N] = pow(fact[N], p-2, p); //Fermat's little theorem O(p)
+  for(int i=N-1; i>=0; i--){
+    inv_fact[i] = (inv_fact[i+1]*(i+1))%p;
+  }
+}
+
+// after storing facts, we can now calculate ncrModP in O(1)
+int ncrModP(int n, int r, int p = mod){
+  if(r>n or n<0 or r<0) return 0; //ncr is not valid
+
+  //calculate ncr % p
+  return fact[n] * inv_fact[r] % p * inv_fact[n-r] % p;
+}

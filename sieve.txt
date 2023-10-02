@@ -1,0 +1,14 @@
+const int N = 1e6;
+vector<int> primes(N+1, 1);
+vector<int> pr; //stores primes
+
+//time: O(N*log(logN))
+void sieve(){
+  primes[1] = 0; // 1 isn't prime
+  for(int i=2; i<=N; i++){
+    if(primes[i] == 1){
+      pr.push_back(i); // i is prime
+      for(int j=i*i; j<=N; j+=i) primes[j] = 0; // multiple of i won't be primes
+    }
+  }
+}
