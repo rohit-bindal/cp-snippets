@@ -1,2 +1,2 @@
 # cp-snippets
-vs code user snippets for cp
+vs code C++ user snippets for cp
