@@ -1,0 +1,12 @@
+int polynomialRollingHash(string s, int prime=31, int mod=1e9+7){
+  //hash[s] = (s[0] + s[1]prime + s[2]prime^2+...)%mod
+  int hashValue = 0;
+  int power = 1;
+
+  for(char ch: s){
+    hashValue = (hashValue + (ch - 'a' + 1)*power)%mod;
+    power = (power * prime)%mod;
+  }
+
+  return hashValue;
+}

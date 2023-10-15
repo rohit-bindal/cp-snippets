@@ -1,0 +1,40 @@
+//returns indices of all occurences of pattern in the text in O(|text| + |pattern|)
+vector<int> rabinKarp(string text, string pattern){
+  vector<int> ans;
+
+  int n = text.size();
+  int m = pattern.size();
+  long long prime = 31;
+  long long mod = 1e9+7;
+
+  //precomputer powers, power[i] = (prime^i)%mod
+  long long power[n];
+  power[0] = 1;
+  for(int i=1; i<n; i++) power[i] = (power[i-1] * prime)%mod;
+
+  //precompute hashes of all prefixes in text
+  long long prefix[n];
+  prefix[0] = (text[0] - 'a' + 1);
+  for(int i=1; i<n; i++){
+    prefix[i] = (prefix[i-1] + ((text[i]-'a'+1)*power[i])%mod)%mod;
+  }
+
+  //compute hash value for pattern
+  int hp = 0; //hash value of pattern
+  for(int i=0; i<m; i++){
+    hp = (hp + ((pattern[i]-'a'+1)*power[i])%mod)%mod;
+  }
+
+  //find occurrences
+  for(int left=0; left<=n-m; left++){
+    int right = left+m-1;
+
+    //compute hash value of left to right substring without dividing prime^left
+    int hs = left==0 ? prefix[right] : (prefix[right] - prefix[left-1] + mod)%mod; //hash value of substring
+
+    //check if substring and pattern are equal in O(1)
+    if((hp * power[left])%mod == hs) ans.push_back(left);
+  }
+
+  return ans;
+}
